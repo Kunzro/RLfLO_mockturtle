@@ -14,6 +14,7 @@ class Mockturtle_mig_api{
         };
         float load_verilog(const std::string &filenames);
         float save_verilog(const std::string &filename);
+        float load_genlib(const std::string &filename);
         // float balance();
         // float rewrite();
         // float refactor();
@@ -45,6 +46,13 @@ float Mockturtle_mig_api::save_verilog(const std::string &filename)
     auto endClk = clock();
     auto elapsed = endClk - beginClk;
     return (float) elapsed/CLOCKS_PER_SEC;
+}
+
+float Mockturtle_mig_api::load_genlib(const std::string &filename)
+{
+    std::vector<mockturtle::gate> gates;
+    lorina::read_genlib(filename, mockturtle::genlib_reader( gates ));
+    mockturtle::tech_library tech_lib( gates );
 }
 
 namespace py = pybind11;
