@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(extern)
 
-set(CMAKE_CXX_FLAGS "-std=gnu++17 -Wall -march=native -fopenmp -fPIC -lreadline -O3 -DNDEBUG -W -Wextra -Wno-unknown-pragmas -pthread -DABC_NAMESPACE=pabc -DABC_NO_USE_READLINE -DDISABLE_NAUTY -DFMT_HEADER_ONLY -DLIN64")
+set(CMAKE_CXX_FLAGS "-std=gnu++17 -Wall -march=native -fopenmp -fPIC -lreadline -g -DNDEBUG -W -Wextra -Wno-unknown-pragmas -pthread -DABC_NAMESPACE=pabc -DABC_NO_USE_READLINE -DDISABLE_NAUTY -DFMT_HEADER_ONLY -DLIN64")
 
 include_directories(extern/mockturtle/include)
 include_directories(extern/mockturtle/lib/abcesop)

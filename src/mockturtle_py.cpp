@@ -15,6 +15,7 @@ class Mockturtle_mig_api{
         float load_verilog(const std::string &filenames);
         float save_verilog(const std::string &filename);
         float load_genlib(const std::string &filename);
+        double get_area();
         // float balance();
         // float rewrite();
         // float refactor();
@@ -22,6 +23,7 @@ class Mockturtle_mig_api{
 
     private:
         mockturtle::mig_network _mig;
+        mockturtle::map_stats _map_stats;
 };
 
 float Mockturtle_mig_api::load_verilog(const std::string &filename)
@@ -53,6 +55,15 @@ float Mockturtle_mig_api::load_genlib(const std::string &filename)
     std::vector<mockturtle::gate> gates;
     lorina::read_genlib(filename, mockturtle::genlib_reader( gates ));
     mockturtle::tech_library tech_lib( gates );
+    mockturtle::map_params ps;
+    mockturtle::map_stats stats;
+    mockturtle::map(_mig, tech_lib, ps, &stats);
+    _map_stats = stats;
+}
+
+double Mockturtle_mig_api::get_area()
+{
+    return _map_stats.area;
 }
 
 namespace py = pybind11;
@@ -62,6 +73,8 @@ PYBIND11_MODULE(Mockturtle_api, handle){
 
     py::class_<Mockturtle_mig_api>(handle, "Mockturtle_mig_api")
         .def(py::init<>())
+        .def("load_genlib", &Mockturtle_mig_api::load_genlib)
+        .def("get_area", &Mockturtle_mig_api::get_area)
         .def("load_verilog", &Mockturtle_mig_api::load_verilog)
         .def("save_verilog", &Mockturtle_mig_api::save_verilog);
 }
