@@ -18,6 +18,8 @@ class Mockturtle_mig_api{
         float save_verilog(const std::string &filename);
         float load_genlib(const std::string &filename);
         double get_area();
+        double get_delay();
+        double get_power();
         float balance(bool crit, uint32_t cut_size);
         float rewrite(bool allow_zero_gain, bool use_dont_cares, bool preserve_depth, uint32_t min_cut_size);
         float refactor(bool allow_zero_gain, bool use_dont_cares);
@@ -120,6 +122,16 @@ double Mockturtle_mig_api::get_area()
     return _map_stats.area;
 }
 
+double Mockturtle_mig_api::get_delay()
+{
+    return _map_stats.delay;
+}
+
+double Mockturtle_mig_api::get_power()
+{
+    return _map_stats.power;
+}
+
 namespace py = pybind11;
 
 PYBIND11_MODULE(Mockturtle_api, handle){
@@ -129,6 +141,8 @@ PYBIND11_MODULE(Mockturtle_api, handle){
         .def(py::init<>())
         .def("load_genlib", &Mockturtle_mig_api::load_genlib)
         .def("get_area", &Mockturtle_mig_api::get_area)
+        .def("get_delay", &Mockturtle_mig_api::get_delay)
+        .def("get_power", &Mockturtle_mig_api::get_power)
         .def("load_verilog", &Mockturtle_mig_api::load_verilog)
         .def("save_verilog", &Mockturtle_mig_api::save_verilog)
         .def("balance", &Mockturtle_mig_api::balance)
