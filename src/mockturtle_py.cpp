@@ -40,10 +40,36 @@ private:
 
 py::array_t<int32_t> Mockturtle_mig_api::get_edge_index()
 {
+    uint64_t count = 0;
+    uint64_t node_count = 0;
+    uint64_t num_maj = 0;
+
+    py::array_t<uint32_t> edge_index(std::vector<ptrdiff_t>{2, _mig.num_gates()*3});
     _mig.foreach_gate( [&]( auto node ) {
-        std::cout <<_mig.node_to_index(node) << "\n";
+        node_count++;
+        if (!(_mig.is_maj(node)) && !(_mig.is_pi(node)) && !(_mig.is_constant(node))){
+            std::cout << "Non maj/pi/const node found!" << "\n";
+        }
+        if (_mig.is_maj(node)){
+            num_maj++;
+        }
+        if (node != _mig.node_to_index(node)){
+            std::cout << "INEDX != NODE" << "\n";
+        }
+        _mig.foreach_fanin( node, [&] (auto sig) {
+            if (_mig.get_node(sig) == node) {
+                std::cout << "sig_get node == node" << "\n";
+            }
+            edge_index[0][count] = _mig.node_to_index(_mig.get_node(sig));
+            edge_index[1][count] = _mig.node_to_index(node);
+            count++;
+            std::cout << "node: " << node  << " get node: " << _mig.get_node(sig) << "\n";
+        } );
+        // std::cout << _mig.node_to_index(node) << "\n";
+        // std::cout << _mig.is_maj(node) << "\n";
     } );
-    py::array_t<int32_t> edge_index(1000000);
+    std::cout << "num_gates: " << _mig.num_gates() << "\n";
+    std::cout << "count: " << count << " node count: " << node_count << " num maj: " << num_maj << "\n";
     return edge_index;
 }
 
@@ -165,6 +191,7 @@ PYBIND11_MODULE(Mockturtle_api, handle)
         .def("get_area", &Mockturtle_mig_api::get_area)
         .def("get_delay", &Mockturtle_mig_api::get_delay)
         .def("get_power", &Mockturtle_mig_api::get_power)
+        .def("get_edge_index", &Mockturtle_mig_api::get_edge_index)
         .def("load_verilog", &Mockturtle_mig_api::load_verilog)
         .def("save_verilog", &Mockturtle_mig_api::save_verilog)
         .def("balance", &Mockturtle_mig_api::balance)
