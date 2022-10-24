@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10...3.18)
 project(Mockturtle_api LANGUAGES CXX)
 
+find_package(Python 3.8 COMPONENTS Interpreter Development REQUIRED)
+
 set(MOCKTURTLE_CXX_STANDARD "17" CACHE STRING "C++ standard")
 set(CMAKE_CXX_STANDARD ${MOCKTURTLE_CXX_STANDARD})
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
