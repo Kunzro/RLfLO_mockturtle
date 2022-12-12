@@ -1,3 +1,6 @@
+# ignore test stuff
+test
+
 # ignore vscode stuff
 .vscode
 
